@@ -11,13 +11,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t notes-app:v2 .'
+                bat 'docker build -t notes-app:v3 .'
             }
         }
 
         stage('Verify Image') {
             steps {
-                bat 'docker image inspect notes-app:v2'
+                bat 'docker image inspect notes-app:v3'
             }
         }
     }
