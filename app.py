@@ -12,18 +12,19 @@ HTML = """
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Notes App - v2</title>
+    <title>My Notes App - v3</title>
     <style>
         body { font-family: Arial; background: #f3f4f6; max-width: 650px; margin: 50px auto; padding: 20px; }
         form, .note { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; }
         input, textarea { box-sizing: border-box; width: 100%; padding: 10px; margin: 8px 0; }
         button { background: #2563eb; color: white; padding: 10px 18px; border: none; border-radius: 5px; cursor: pointer; }
+        .delete { background: #dc2626; }
         a { margin-right: 10px; }
     </style>
 </head>
 <body>
     <h1>My Notes App</h1>
-    <p>Version 2 - Add, View and Edit Notes</p>
+    <p>Version 3 - Add, View, Edit and Delete Notes</p>
 
     <form method="POST" action="/add">
         <input name="title" placeholder="Note title" required>
@@ -45,6 +46,9 @@ HTML = """
         <h3>{{ note.title }}</h3>
         <p>{{ note.content }}</p>
         <a href="/?edit={{ note.id }}">Edit</a>
+        <form method="POST" action="/delete/{{ note.id }}">
+            <button class="delete" type="submit">Delete</button>
+        </form>
         {% endif %}
     </div>
     {% endfor %}
@@ -75,6 +79,12 @@ def edit(note_id):
             note["title"] = request.form["title"]
             note["content"] = request.form["content"]
             break
+    return redirect("/")
+
+@app.route("/delete/<int:note_id>", methods=["POST"])
+def delete(note_id):
+    global notes
+    notes = [note for note in notes if note["id"] != note_id]
     return redirect("/")
 
 if __name__ == "__main__":
